@@ -1,8 +1,15 @@
 from flask import Flask, render_template, request
-from flask_restful import Api, Resource
 
 app = Flask(__name__)
-api = Api(app)
+
+# initialize the apis
+from apis import api, Resource
+api.init_app(app)
+
+# configure the database
+from models import db
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+db.init_app(app)
 
 message_data = "Welcome to the Mad1 bootcamp!"
 
@@ -28,4 +35,6 @@ class Mad2(Resource):
 api.add_resource(Mad2, '/mad2')
 
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
