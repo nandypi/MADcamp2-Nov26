@@ -1,0 +1,22 @@
+<h1>Hey welcome to MAD1</h1>
+
+<p>{{message}}</p>
+
+<br>
+
+<h1>Hey welcome to MAD2</h1>
+
+<button onclick="fetchmessage()">Click to call API to load message</button>
+<p id="msg">API message will appear here</p>
+
+<script>
+    
+    function fetchmessage() {
+        fetch('/mad2')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('msg').innerText = data.message;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
