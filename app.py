@@ -1,13 +1,16 @@
 from flask import Flask, render_template, request
+from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
+app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Change this to a random secret key
+jwt = JWTManager(app)
 
 # initialize the apis
 from apis import api, Resource
 api.init_app(app)
 
 # configure the database
-from models import db
+from models import db, User
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db.init_app(app)
 
@@ -36,5 +39,13 @@ api.add_resource(Mad2, '/mad2')
 
 if __name__ == "__main__":
     with app.app_context():
+        admin_user = db.session.query(db.exists().where(User.role == 'admin')).scalar()
+        if not admin_user:
+            admin = User(email='admin@gmail.com', name='Admin', password='password', role='admin')
+            db.session.add(admin)
+            db.session.commit()
+            print("Admin user created with email: admin@gmail.com and password: password")
+        else:
+            print("Admin user already exists with email: admin@gmail.com and password: password")
         db.create_all()
     app.run(debug=True)
