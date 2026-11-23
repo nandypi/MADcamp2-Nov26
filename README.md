@@ -24,5 +24,15 @@ python -m pip install requirements.txt # install whatever packages mentioned in 
 python -m pip freeze > requirements.txt
 ```
 ## Frontend
-
-// to do
+1. Change directory to frontend
+```bash
+cd frontend
+```
+2. Install packages if not 
+```bash
+npm install
+```
+3. Run the app
+```bash
+npm run dev
+```
