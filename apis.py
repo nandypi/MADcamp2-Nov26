@@ -45,7 +45,7 @@ class Login(Resource):
             return {"message": "Invalid credentials."}, 401
 
         access_token = create_access_token(identity=user.email)
-        return {"message": "Login successful.", "access_token": access_token}, 200
+        return {"message": "Login successful.", "access_token": access_token, "role": user.role}, 200
 api.add_resource(Login, '/login')
 
 def is_admin():
