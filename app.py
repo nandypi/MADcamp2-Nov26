@@ -9,8 +9,11 @@ app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Change this to a random secr
 jwt = JWTManager(app)
 
 # initialize the apis
-from apis import api, Resource
+from apis import api, Resource, cache
 api.init_app(app)
+app.config['CACHE_TYPE'] = 'RedisCache'  # Use simple in-memory cache
+app.config['CACHE_REDIS_URL'] = 'redis://localhost:6379/0'  # Redis server URL
+cache.init_app(app)
 
 # configure the database
 from models import db, User

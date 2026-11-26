@@ -2,8 +2,10 @@ from flask_restful import Api, Resource
 from models import db, User, Items
 from flask import request
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_caching import Cache
 
 api = Api()
+cache = Cache()
 
 class Hello(Resource):
     def get(self):
@@ -53,11 +55,15 @@ def is_admin():
     user = User.query.filter_by(email=current_user_email).first()
     return user and user.role == 'admin'
 
+import time
+
 class Item(Resource):
-    @jwt_required()
+    # @jwt_required()
+    @cache.cached(timeout=10)
     def get(self, item_id=None):
         if item_id is None:
-            items = Items.query.all()
+            items = Items.query.all() # querying all items from the database
+            time.sleep(3)  # Simulating a delay of 3 seconds
             return [{"id": item.id, "name": item.name, "url": item.url} for item in items]
         item = Items.query.get(item_id)
         if not item:
